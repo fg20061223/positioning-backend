@@ -1,0 +1,13 @@
+sql/00_init.sql以我最新的修改为准，不要修改回去。
+不要删除已有的代码注释，除非注释已过时、错误。
+生成后端代码，Nacos作为注册中心，SpringBoot分模块，分别注册到注册中心上。
+分成三个模块：
+1.网关使用SpringBoot Cloud Gateway，负责路由、限流、熔断。
+2.登录鉴权框架使用Sa-Token，结合sql/01_auth_db.sql生成业务接口。
+  分成两个子模块：api（对外暴露的feign）模块和biz（业务接口、逻辑）模块。
+3.业务模块，结合sql/02_business_db.sql生成业务接口。
+  分成两个子模块：api（对外暴露的feign，预留）和biz（业务接口、逻辑）模块。
+
+要求：JDK21，构建工具为Maven、ORM框架为MyBatis-Plus、SpringBoot相关的中间件版本以较新且相互兼容的版本。
+如果需要，各个微服务可通过OpenFeign进行调用。
+补充：所有接口请求都改成POST，出入参交互改为JSON格式
