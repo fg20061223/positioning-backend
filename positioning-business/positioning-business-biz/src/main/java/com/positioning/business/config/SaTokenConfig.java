@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * Sa-Token 路由拦截配置: 业务接口全部要求登录（JWT 由认证服务签发）
+ * 放行内部 Feign 接口（/internal/**），仅限服务间调用
  */
 @Configuration
 public class SaTokenConfig implements WebMvcConfigurer {
@@ -16,7 +17,7 @@ public class SaTokenConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new SaInterceptor(handle -> SaRouter.match("/**")
-                        .notMatch("/actuator/**", "/error")
+                        .notMatch("/internal/**", "/actuator/**", "/error")
                         .check(r -> StpUtil.checkLogin())))
                 .addPathPatterns("/**");
     }
