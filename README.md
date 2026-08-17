@@ -13,7 +13,7 @@
 | 鉴权 | Sa-Token 1.45.0（JWT 无状态模式） |
 | ORM | MyBatis-Plus 3.5.12 |
 | 数据库 | PostgreSQL 16 + PostGIS（`postgis_36_sample` 库，`auth` / `business` 两个架构） |
-| 构建 | Maven 3.9+ |
+| 构建 | Maven 3.9+ | 
 
 ## 模块结构
 
