@@ -28,5 +28,10 @@
             <version>3.5.19</version>
             <optional>true</optional>
         </dependency>
+        <!-- OpenAPI 注解库: 统一响应/分页/通用入参标注 @Schema 中文说明 -->
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations-jakarta</artifactId>
+        </dependency>
     </dependencies>
 </project>

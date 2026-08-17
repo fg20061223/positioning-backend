@@ -15,6 +15,9 @@ import com.positioning.common.api.PageResult;
 import com.positioning.common.api.Result;
 import com.positioning.common.dto.IdRequest;
 import com.positioning.common.exception.BizException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +29,7 @@ import java.util.List;
 /**
  * 商铺接口（含模糊搜索与空间查询; 全部 POST + JSON）
  */
+@Tag(name = "商铺管理", description = "商铺 CRUD、条件分页、名称模糊搜索、几何读写")
 @RestController
 @RequestMapping("/business/shop")
 @RequiredArgsConstructor
@@ -40,7 +44,8 @@ public class ShopController extends BaseCrudController<Shop> {
 
     /** 条件分页: 商场/楼层/分类/状态/关键词 */
     @PostMapping("/query")
-    public Result<PageResult<Shop>> query(@RequestBody(required = false) ShopQuery request) {
+    @Operation(summary = "条件分页", description = "商铺条件分页: 商场/楼层/分类/状态/关键词")
+    public Result<PageResult<Shop>> query(@RequestBody(required = false) @Parameter(description = "条件分页参数（可空）", required = false) ShopQuery request) {
         ShopQuery q = request == null ? new ShopQuery() : request;
         LambdaQueryWrapper<Shop> wrapper = Wrappers.lambdaQuery(Shop.class)
                 .eq(q.getMallId() != null, Shop::getMallId, q.getMallId())
@@ -59,7 +64,8 @@ public class ShopController extends BaseCrudController<Shop> {
 
     /** 商铺名称模糊搜索（走 pg_trgm 索引） */
     @PostMapping("/search")
-    public Result<List<ShopSearchVO>> search(@RequestBody ShopSearchRequest request) {
+    @Operation(summary = "商铺名称模糊搜索", description = "商铺名称模糊搜索（走 pg_trgm 索引）")
+    public Result<List<ShopSearchVO>> search(@RequestBody @Parameter(description = "商铺模糊搜索请求", required = true) ShopSearchRequest request) {
         if (request == null || request.getMallId() == null) {
             throw new BizException(400, "商场ID不能为空");
         }
@@ -70,7 +76,8 @@ public class ShopController extends BaseCrudController<Shop> {
 
     /** 查询商铺几何（GeoJSON） */
     @PostMapping("/get-geometry")
-    public Result<ShopGeometryVO> getGeometry(@RequestBody IdRequest request) {
+    @Operation(summary = "查询商铺几何", description = "查询商铺几何（GeoJSON, 入参 {\"id\":1}）")
+    public Result<ShopGeometryVO> getGeometry(@RequestBody @Parameter(description = "按ID操作参数", required = true) IdRequest request) {
         if (request == null || request.getId() == null) {
             throw new BizException(400, "商铺ID不能为空");
         }
@@ -83,7 +90,8 @@ public class ShopController extends BaseCrudController<Shop> {
 
     /** 更新商铺几何（轮廓 GeoJSON + 入口点 GeoJSON） */
     @PostMapping("/update-geometry")
-    public Result<Void> updateGeometry(@RequestBody ShopGeometryRequest request) {
+    @Operation(summary = "更新商铺几何", description = "更新商铺几何（轮廓 GeoJSON + 入口点 GeoJSON）")
+    public Result<Void> updateGeometry(@RequestBody @Parameter(description = "商铺几何更新请求", required = true) ShopGeometryRequest request) {
         if (request == null || request.getId() == null) {
             throw new BizException(400, "商铺ID不能为空");
         }

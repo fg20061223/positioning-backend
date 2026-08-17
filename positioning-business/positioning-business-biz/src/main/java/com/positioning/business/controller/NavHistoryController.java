@@ -9,6 +9,9 @@ import com.positioning.business.mapper.NavHistoryMapper;
 import com.positioning.common.api.PageResult;
 import com.positioning.common.api.Result;
 import com.positioning.common.dto.PageQuery;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * 导航历史接口
  */
+@Tag(name = "导航历史管理", description = "导航历史 CRUD、保存导航记录、我的导航历史")
 @RestController
 @RequestMapping("/business/nav-history")
 @RequiredArgsConstructor
@@ -32,7 +36,8 @@ public class NavHistoryController extends BaseCrudController<NavHistory> {
 
     /** 保存导航记录（自动绑定当前登录用户） */
     @PostMapping("/record")
-    public Result<NavHistory> record(@RequestBody NavHistory history) {
+    @Operation(summary = "保存导航记录", description = "保存导航记录（自动绑定当前登录用户）")
+    public Result<NavHistory> record(@RequestBody @Parameter(description = "导航历史实体", required = true) NavHistory history) {
         history.setUserId(StpUtil.getLoginIdAsLong());
         navHistoryMapper.insert(history);
         return Result.ok(history);
@@ -40,7 +45,8 @@ public class NavHistoryController extends BaseCrudController<NavHistory> {
 
     /** 我的导航历史 */
     @PostMapping("/my")
-    public Result<PageResult<NavHistory>> my(@RequestBody(required = false) PageQuery query) {
+    @Operation(summary = "我的导航历史", description = "我的导航历史（当前登录用户分页）")
+    public Result<PageResult<NavHistory>> my(@RequestBody(required = false) @Parameter(description = "分页参数（可空）", required = false) PageQuery query) {
         PageQuery q = query == null ? new PageQuery() : query;
         Long userId = StpUtil.getLoginIdAsLong();
         Page<NavHistory> page = navHistoryMapper.selectPage(new Page<>(q.getPageNum(), q.getPageSize()),

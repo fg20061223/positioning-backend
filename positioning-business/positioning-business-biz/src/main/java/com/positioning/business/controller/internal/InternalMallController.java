@@ -6,13 +6,18 @@ import com.positioning.business.entity.Mall;
 import com.positioning.business.mapper.MallMapper;
 import com.positioning.common.api.Result;
 import com.positioning.common.dto.IdRequest;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 商场内部接口（供 Feign 跨服务调用）
  */
+@Tag(name = "商场内部接口", description = "商场内部接口（供 Feign 跨服务调用）")
 @RestController
 @RequestMapping("/internal/mall")
 @RequiredArgsConstructor
@@ -21,7 +26,8 @@ public class InternalMallController implements MallFeignClient {
     private final MallMapper mallMapper;
 
     @Override
-    public Result<MallDTO> getMall(IdRequest request) {
+    @Operation(summary = "查询商场", description = "按ID查询商场（供 Feign 跨服务调用, 入参 {\"id\":1}）")
+    public Result<MallDTO> getMall(@RequestBody @Parameter(description = "按ID操作参数", required = true) IdRequest request) {
         if (request == null || request.getId() == null) {
             return Result.fail(400, "商场ID不能为空");
         }

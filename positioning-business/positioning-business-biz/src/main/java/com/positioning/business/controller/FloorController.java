@@ -7,6 +7,9 @@ import com.positioning.business.mapper.MallFloorMapper;
 import com.positioning.common.api.Result;
 import com.positioning.common.dto.IdRequest;
 import com.positioning.common.exception.BizException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +21,7 @@ import java.util.List;
 /**
  * 楼层接口
  */
+@Tag(name = "楼层管理", description = "楼层 CRUD、按商场查询楼层列表")
 @RestController
 @RequestMapping("/business/floor")
 @RequiredArgsConstructor
@@ -32,7 +36,8 @@ public class FloorController extends BaseCrudController<MallFloor> {
 
     /** 按商场查询楼层列表（按排序号升序, JSON: {"id":商场ID}） */
     @PostMapping("/by-mall")
-    public Result<List<MallFloor>> byMall(@RequestBody IdRequest request) {
+    @Operation(summary = "按商场查询楼层列表", description = "按商场查询楼层列表（按排序号升序, 入参 {\"id\":商场ID}）")
+    public Result<List<MallFloor>> byMall(@RequestBody @Parameter(description = "按ID操作参数（商场ID）", required = true) IdRequest request) {
         if (request == null || request.getId() == null) {
             throw new BizException(400, "商场ID不能为空");
         }

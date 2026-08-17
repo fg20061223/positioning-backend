@@ -1,6 +1,7 @@
 package com.positioning.business.dto;
 
 import com.positioning.common.dto.PageQuery;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -9,20 +10,26 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
+@Schema(description = "商铺条件分页查询请求（JSON 入参）")
 public class ShopQuery extends PageQuery {
 
     /** 所属商场ID */
+    @Schema(description = "所属商场ID")
     private Long mallId;
 
     /** 所属楼层ID */
+    @Schema(description = "所属楼层ID")
     private Long floorId;
 
     /** 商铺分类ID */
+    @Schema(description = "商铺分类ID")
     private Long categoryId;
 
     /** 商铺状态: OPEN/DECORATING/CLOSED */
+    @Schema(description = "商铺状态: OPEN/DECORATING/CLOSED")
     private String status;
 
     /** 搜索关键词（名称/关键词模糊匹配） */
+    @Schema(description = "搜索关键词（名称/关键词模糊匹配）")
     private String keyword;
 }

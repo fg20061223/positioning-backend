@@ -12,6 +12,9 @@ import com.positioning.business.mapper.NavNodeMapper;
 import com.positioning.common.api.PageResult;
 import com.positioning.common.api.Result;
 import com.positioning.common.exception.BizException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * 导航节点接口
  */
+@Tag(name = "导航节点管理", description = "节点 CRUD、条件分页、带几何创建节点")
 @RestController
 @RequestMapping("/business/nav-node")
 @RequiredArgsConstructor
@@ -35,7 +39,8 @@ public class NavNodeController extends BaseCrudController<NavNode> {
 
     /** 条件分页: 商场/楼层 */
     @PostMapping("/query")
-    public Result<PageResult<NavNode>> query(@RequestBody(required = false) NavNodeQuery request) {
+    @Operation(summary = "条件分页", description = "导航节点条件分页: 商场/楼层")
+    public Result<PageResult<NavNode>> query(@RequestBody(required = false) @Parameter(description = "条件分页参数（可空）", required = false) NavNodeQuery request) {
         NavNodeQuery q = request == null ? new NavNodeQuery() : request;
         LambdaQueryWrapper<NavNode> wrapper = Wrappers.lambdaQuery(NavNode.class)
                 .eq(q.getMallId() != null, NavNode::getMallId, q.getMallId())
@@ -48,7 +53,8 @@ public class NavNodeController extends BaseCrudController<NavNode> {
 
     /** 带几何创建节点（geom 为 NOT NULL 列, 必须走本接口） */
     @PostMapping("/with-geometry")
-    public Result<Long> createWithGeometry(@RequestBody NavNodeCreateRequest request) {
+    @Operation(summary = "带几何创建节点", description = "带几何创建节点（geom 为 NOT NULL 列, 必须走本接口）")
+    public Result<Long> createWithGeometry(@RequestBody @Parameter(description = "导航节点创建请求（含几何 GeoJSON）", required = true) NavNodeCreateRequest request) {
         if (request.getGeomGeoJson() == null || request.getGeomGeoJson().isBlank()) {
             throw new BizException(400, "节点几何不能为空");
         }

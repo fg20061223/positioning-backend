@@ -6,13 +6,18 @@ import com.positioning.business.entity.ParkingSpace;
 import com.positioning.business.mapper.ParkingSpaceMapper;
 import com.positioning.common.api.Result;
 import com.positioning.common.dto.IdRequest;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 车位内部接口（供 Feign 跨服务调用）
  */
+@Tag(name = "车位内部接口", description = "车位内部接口（供 Feign 跨服务调用）")
 @RestController
 @RequestMapping("/internal/space")
 @RequiredArgsConstructor
@@ -21,7 +26,8 @@ public class InternalSpaceController implements SpaceFeignClient {
     private final ParkingSpaceMapper spaceMapper;
 
     @Override
-    public Result<SpaceDTO> getSpace(IdRequest request) {
+    @Operation(summary = "查询车位", description = "按ID查询车位（供 Feign 跨服务调用, 入参 {\"id\":1}）")
+    public Result<SpaceDTO> getSpace(@RequestBody @Parameter(description = "按ID操作参数", required = true) IdRequest request) {
         if (request == null || request.getId() == null) {
             return Result.fail(400, "车位ID不能为空");
         }

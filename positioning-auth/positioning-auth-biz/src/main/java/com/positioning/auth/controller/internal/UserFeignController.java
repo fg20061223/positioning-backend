@@ -6,6 +6,9 @@ import com.positioning.auth.entity.SysUser;
 import com.positioning.auth.mapper.SysUserMapper;
 import com.positioning.common.api.Result;
 import com.positioning.common.dto.IdRequest;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * 用户中心内部接口实现（供 Feign 跨服务调用）
  */
+@Tag(name = "用户中心内部接口", description = "供 Feign 跨服务调用的用户信息接口")
 @RestController
 @RequestMapping("/internal/user")
 @RequiredArgsConstructor
@@ -21,7 +25,8 @@ public class UserFeignController implements UserFeignClient {
     private final SysUserMapper sysUserMapper;
 
     @Override
-    public Result<UserDTO> getUser(IdRequest request) {
+    @Operation(summary = "获取用户信息", description = "按用户ID查询用户信息，供 Feign 跨服务调用")
+    public Result<UserDTO> getUser(@Parameter(description = "按ID查询用户请求", required = true) IdRequest request) {
         if (request == null || request.getId() == null) {
             return Result.fail(400, "用户ID不能为空");
         }

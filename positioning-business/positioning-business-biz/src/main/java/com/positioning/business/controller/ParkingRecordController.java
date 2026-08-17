@@ -12,6 +12,9 @@ import com.positioning.common.api.Result;
 import com.positioning.common.dto.IdRequest;
 import com.positioning.common.dto.PageQuery;
 import com.positioning.common.exception.BizException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * 停车记录接口
  */
+@Tag(name = "停车记录管理", description = "停车记录 CRUD、入场停车、离场、我的停车记录")
 @RestController
 @RequestMapping("/business/parking-record")
 @RequiredArgsConstructor
@@ -36,7 +40,8 @@ public class ParkingRecordController extends BaseCrudController<ParkingRecord> {
 
     /** 入场停车（联动车位占用） */
     @PostMapping("/park")
-    public Result<ParkingRecord> park(@RequestBody ParkingRecord record) {
+    @Operation(summary = "入场停车", description = "入场停车（联动车位占用）")
+    public Result<ParkingRecord> park(@RequestBody @Parameter(description = "停车记录实体", required = true) ParkingRecord record) {
         if (record.getUserId() == null) {
             record.setUserId(StpUtil.getLoginIdAsLong());
         }
@@ -45,7 +50,8 @@ public class ParkingRecordController extends BaseCrudController<ParkingRecord> {
 
     /** 离场（联动车位释放, JSON: {"id":记录ID}） */
     @PostMapping("/end")
-    public Result<ParkingRecord> end(@RequestBody IdRequest request) {
+    @Operation(summary = "离场", description = "离场（联动车位释放, 入参 {\"id\":记录ID}）")
+    public Result<ParkingRecord> end(@RequestBody @Parameter(description = "按ID操作参数（记录ID）", required = true) IdRequest request) {
         if (request == null || request.getId() == null) {
             throw new BizException(400, "记录ID不能为空");
         }
@@ -54,7 +60,8 @@ public class ParkingRecordController extends BaseCrudController<ParkingRecord> {
 
     /** 我的停车记录 */
     @PostMapping("/my")
-    public Result<PageResult<ParkingRecord>> my(@RequestBody(required = false) PageQuery query) {
+    @Operation(summary = "我的停车记录", description = "我的停车记录（当前登录用户分页）")
+    public Result<PageResult<ParkingRecord>> my(@RequestBody(required = false) @Parameter(description = "分页参数（可空）", required = false) PageQuery query) {
         PageQuery q = query == null ? new PageQuery() : query;
         Long userId = StpUtil.getLoginIdAsLong();
         Page<ParkingRecord> page = parkingRecordMapper.selectPage(new Page<>(q.getPageNum(), q.getPageSize()),
