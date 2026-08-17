@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ============================================================
+  商场可视化智能车位/商铺导航系统 - 全局 Logback 日志配置
+  位置: positioning-common/src/main/resources/logback-spring.xml
+  说明: common 被 网关/认证/业务 三个应用依赖, 本配置对三个服务统一生效;
+        各服务通过 spring.application.name 区分日志文件目录与文件名。
+  输出:
+    * 控制台: 全部级别
+    * 全部日志: logs/{服务名}/{服务名}-all.log, 按日期+大小滚动, 保留 30 天
+    * 异常日志: logs/{服务名}/{服务名}-error.log, 仅 ERROR 级别(含异常堆栈), 按日期+大小滚动, 保留 30 天
+  可覆盖项(环境变量):
+    * LOG_PATH  : 日志根目录, 默认 ./logs (也可用 yml 的 logging.file.path 覆盖)
+    * LOG_LEVEL : 根日志级别, 默认 INFO
+  ============================================================
+-->
+<configuration scan="true" scanPeriod="60 seconds">
+
+    <!-- ========== 通用属性 ========== -->
+    <!-- 服务名: 取自 spring.application.name (positioning-gateway/positioning-auth/positioning-business) -->
+    <springProperty scope="context" name="APP_NAME" source="spring.application.name" defaultValue="positioning"/>
+    <!-- 日志根目录: 默认 ./logs, 可用环境变量 LOG_PATH 或 yml logging.file.path 覆盖 -->
+    <property name="LOG_DIR" value="${LOG_PATH:-logs}/${APP_NAME}"/>
+    <!-- 保留天数 -->
+    <property name="MAX_HISTORY" value="30"/>
+    <!-- 单个日志文件上限(超过后按 .0/.1/.2 递增滚动) -->
+    <property name="MAX_FILE_SIZE" value="100MB"/>
+    <!-- 根日志级别: 可用环境变量 LOG_LEVEL 覆盖 -->
+    <springProperty scope="context" name="ROOT_LEVEL" source="logging.level.root" defaultValue="INFO"/>
+
+    <!-- 日志输出格式: 时间 | 级别 | 线程 | 类名(截断) - 消息 + 异常堆栈 -->
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{40} - %msg%n"/>
+
+    <!-- ========== 控制台 ========== -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- ========== 全部日志(所有级别, 按日期+大小滚动) ========== -->
+    <appender name="ALL_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/${APP_NAME}-all.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/${APP_NAME}-all.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- ========== 异常日志(仅 ERROR 及以上, 按日期+大小滚动) ========== -->
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/${APP_NAME}-error.log</file>
+        <!-- 阈值过滤: 只收集 ERROR 级别(含异常堆栈的完整记录) -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/${APP_NAME}-error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- ========== 根日志: 控制台 + 全部日志 + 异常日志 ========== -->
+    <root level="${ROOT_LEVEL}">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="ALL_FILE"/>
+        <appender-ref ref="ERROR_FILE"/>
+    </root>
+
+</configuration>

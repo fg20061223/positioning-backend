@@ -104,6 +104,19 @@ curl -X POST http://127.0.0.1:8081/business/nav/route \
   -d '{"mallId":1,"fromNodeId":101,"toNodeId":205}'
 ```
 
+## 日志（Logback）
+
+全局日志配置位于 `positioning-common/src/main/resources/logback-spring.xml`，三个服务统一生效：
+
+| 输出 | 文件 | 说明 |
+| --- | --- | --- |
+| 全部日志 | `logs/{服务名}/{服务名}-all.log` | 所有级别，按日期+大小滚动，保留 30 天 |
+| 异常日志 | `logs/{服务名}/{服务名}-error.log` | 仅 ERROR（含异常堆栈），按日期+大小滚动，保留 30 天 |
+| 控制台 | stdout | 全部级别（开发调试） |
+
+- 滚动文件名带日期：`xxx-all.2026-08-17.0.log`（单文件超 100MB 时 `.0/.1/.2` 递增）
+- 可用环境变量覆盖：`LOG_PATH`（日志根目录，默认 `./logs`）、`LOG_LEVEL`（根级别，默认 INFO）
+
 ## 说明与约定
 
 - 主键由应用层雪花 ID 生成；跨库/跨架构不做物理外键，由应用保证一致性。
