@@ -21,6 +21,8 @@ public class GlobalExceptionHandler {
     /** 未登录/登录过期 */
     @ExceptionHandler(NotLoginException.class)
     public Result<Void> handleNotLogin(NotLoginException e) {
+        log.warn("未登录/登录过期: type={}, loginType={}, extra={}",
+                e.getType(), e.getLoginType(), e.getMessage());
         return Result.fail(401, "未登录或登录已过期");
     }
 

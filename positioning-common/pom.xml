@@ -20,5 +20,13 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+        <!-- 仅编译依赖: MyBatis 类型处理器注解/基类(与 mybatis-plus 3.5.12 内置的 3.5.19 一致) -->
+        <!-- optional 不向网关等下游传递, 运行时由各 biz 模块的 mybatis-plus 提供 -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.5.19</version>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 </project>

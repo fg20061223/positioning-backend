@@ -14,7 +14,7 @@ spring:
   # PostgreSQL: postgis_36_sample 库的 auth 架构
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${DB_HOST:127.0.0.1}:${DB_PORT:5432}/${DB_NAME:postgis_36_sample}?currentSchema=auth
+    url: jdbc:postgresql://${DB_HOST:127.0.0.1}:${DB_PORT:5432}/${DB_NAME:postgis_36_sample}?options=-csearch_path%3Dauth%2Cpublic
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:123456}
   jackson:
@@ -28,11 +28,13 @@ sa-token:
   active-timeout: -1
   is-concurrent: true
   is-share: true
-  token-style: jwt-simple
+  token-style: jwt
   jwt-secret-key: ${SA_TOKEN_SECRET:positioning-backend-sa-token-jwt-secret-2026}
 
 # MyBatis-Plus
 mybatis-plus:
+  # 自定义类型处理器: PostgreSQL TIMESTAMPTZ -> LocalDateTime 转换
+  type-handlers-package: com.positioning.common.mybatis
   configuration:
     map-underscore-to-camel-case: true
   global-config:
