@@ -91,8 +91,8 @@ positioning-backend
     └── positioning-business-biz         # 端口 8102，JDBC currentSchema=business
         ├── BusinessApplication.java     # @EnableFeignClients(UserFeignClient)
         ├── config/（SaToken/StpInterface/MybatisPlus/OpenApi/WebConfig）
-        ├── entity/（18 张业务表实体）
-        ├── mapper/（18 个 Mapper，含 PostGIS @Select/@Update）
+        ├── entity/（业务表实体）
+        ├── mapper/（业务表实体对应的Mapper）
         ├── service/（NavService 路径规划、ParkingRecordService 停车联动）
         ├── dto/（查询/请求/响应 DTO）
         ├── controller/
@@ -261,7 +261,6 @@ curl -X POST http://127.0.0.1:8081/business/nav/route \
 | `README.md` | 本文件：项目总览、架构设计与运行说明（主文档） |
 | `pom.xml` | 父工程版本管理 |
 | `docs/01-database-design.md` | 数据库设计文档 |
-| `docs/管理后台前端规划.md` | PC 管理后台前端规划（技术选型/接口清单/页面结构/导航图编辑器方案） |
 | `docs/pcManager/` | PC 管理后台前端交接包（PROJECT_CONTEXT / API_CONTRACT / HANDOFF_TEMPLATE） |
 | `docs/DeepSeek-Harness-交接提示词.md` | 可直接粘贴给新执行环境的主提示词 |
 | `docs/初始代码版本提示词.txt` | 用户历史提示词（勿动） |
