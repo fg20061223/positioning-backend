@@ -54,6 +54,16 @@ positioning:
       capacity: 100
       refill-per-minute: 100
 
+# Sa-Token 配置: 与认证/业务服务共享 jwt-secret-key, 网关独立验签 JWT(统一鉴权)
+sa-token:
+  token-name: satoken
+  timeout: 2592000
+  active-timeout: -1
+  is-concurrent: true
+  is-share: true
+  token-style: jwt
+  jwt-secret-key: ${SA_TOKEN_SECRET:positioning-backend-sa-token-jwt-secret-2026}
+
 # Resilience4j 熔断配置
 resilience4j:
   circuitbreaker:
