@@ -8,8 +8,7 @@
 
 ## 0. 相关文件（先全部阅读再动手）
 
-- `README.md`：项目总览、版本矩阵、启动方式、接口约定
-- `docs/项目设计架构总结.md`：本项目最完整的设计与代码总结（本提示词的详细版）
+- `docs/README.md`：项目总览与设计架构总结（主文档，已合并原 `docs/项目设计架构总结.md`；含技术栈/模块结构/服务配置/认证业务设计/启动方式/接口约定）
 - `docs/01-database-design.md`：数据库设计文档
 - `sql/00_init.sql`、`sql/01_auth_db.sql`、`sql/02_business_db.sql`：数据库脚本
 - 根目录 `pom.xml`：版本管理（Spring Boot 3.5.16 / Spring Cloud 2025.0.3 / Spring Cloud Alibaba 2025.0.0.0 / MyBatis-Plus 3.5.12 / Sa-Token 1.45.0）
