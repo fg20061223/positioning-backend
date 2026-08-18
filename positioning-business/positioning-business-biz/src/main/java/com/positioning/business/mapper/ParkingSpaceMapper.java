@@ -46,11 +46,11 @@ public interface ParkingSpaceMapper extends BaseMapper<ParkingSpace> {
     /** 更新车位几何（轮廓+入口点, 中心点自动取质心） */
     @Update("""
             UPDATE parking_space
-            SET geom = ST_GeomFromGeoJSON(#{geomGeoJson}, 0),
-                center_point = ST_Centroid(ST_GeomFromGeoJSON(#{geomGeoJson}, 0)),
+            SET geom = ST_SetSRID(ST_GeomFromGeoJSON(#{geomGeoJson}), 0),
+                center_point = ST_Centroid(ST_SetSRID(ST_GeomFromGeoJSON(#{geomGeoJson}), 0)),
                 entrance_point = CASE
                     WHEN #{entranceGeoJson} IS NOT NULL AND #{entranceGeoJson} <> ''
-                    THEN ST_GeomFromGeoJSON(#{entranceGeoJson}, 0)
+                    THEN ST_SetSRID(ST_GeomFromGeoJSON(#{entranceGeoJson}), 0)
                     ELSE NULL END,
                 updated_at = now()
             WHERE id = #{id}

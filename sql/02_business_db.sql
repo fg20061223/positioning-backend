@@ -73,6 +73,7 @@ CREATE TABLE mall_floor (
     status     SMALLINT      NOT NULL DEFAULT 1,
     width_m    DOUBLE PRECISION,
     height_m   DOUBLE PRECISION,
+    image_url  VARCHAR(512),
     remark     VARCHAR(255),
     created_at TIMESTAMPTZ   NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ   NOT NULL DEFAULT now(),
@@ -89,6 +90,7 @@ COMMENT ON COLUMN mall_floor.sort_order IS '楼层排序号（地下到地上递
 COMMENT ON COLUMN mall_floor.status IS '楼层状态：1=开放 0=关闭';
 COMMENT ON COLUMN mall_floor.width_m IS '楼层平面图宽度（米）';
 COMMENT ON COLUMN mall_floor.height_m IS '楼层平面图高度（米）';
+COMMENT ON COLUMN mall_floor.image_url IS '楼层平面图URL（上传后返回，导航图编辑器底图）';
 COMMENT ON COLUMN mall_floor.remark IS '备注';
 COMMENT ON COLUMN mall_floor.created_at IS '创建时间';
 COMMENT ON COLUMN mall_floor.updated_at IS '更新时间';

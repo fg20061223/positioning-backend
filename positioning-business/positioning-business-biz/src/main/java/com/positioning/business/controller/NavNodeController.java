@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.positioning.business.dto.NavNodeQuery;
 import com.positioning.business.dto.NavNodeCreateRequest;
+import com.positioning.business.dto.NavNodeGeometryRequest;
 import com.positioning.business.entity.NavNode;
 import com.positioning.business.mapper.NavNodeMapper;
 import com.positioning.common.api.PageResult;
@@ -62,10 +63,28 @@ public class NavNodeController extends BaseCrudController<NavNode> {
         int inserted = navNodeMapper.insertWithGeometry(id, request.getMallId(), request.getFloorId(),
                 request.getNodeType(), request.getName(), request.getGeomGeoJson(),
                 request.getIsAccessible() == null ? Boolean.TRUE : request.getIsAccessible(),
-                request.getSortOrder(), request.getRemark());
+                request.getSortOrder() == null ? 0 : request.getSortOrder(),
+                request.getRemark());
         if (inserted == 0) {
             throw new BizException(500, "节点创建失败");
         }
         return Result.ok(id);
+    }
+
+    /** 更新节点几何（编辑器拖拽移动节点） */
+    @PostMapping("/update-geometry")
+    @Operation(summary = "更新节点几何", description = "更新节点几何（编辑器拖拽移动节点, 入参 {\"id\":1,\"geomGeoJson\":\"{\\\"type\\\":\\\"Point\\\",...}\"}）")
+    public Result<Void> updateGeometry(@RequestBody @Parameter(description = "导航节点几何更新请求", required = true) NavNodeGeometryRequest request) {
+        if (request == null || request.getId() == null) {
+            throw new BizException(400, "节点ID不能为空");
+        }
+        if (request.getGeomGeoJson() == null || request.getGeomGeoJson().isBlank()) {
+            throw new BizException(400, "节点几何不能为空");
+        }
+        int updated = navNodeMapper.updateGeometry(request.getId(), request.getGeomGeoJson());
+        if (updated == 0) {
+            throw new BizException(404, "节点不存在");
+        }
+        return Result.ok();
     }
 }

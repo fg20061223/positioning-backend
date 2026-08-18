@@ -5,6 +5,7 @@ import com.positioning.business.entity.NavNode;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ public interface NavNodeMapper extends BaseMapper<NavNode> {
     @Insert("""
             INSERT INTO nav_node (id, mall_id, floor_id, node_type, name, geom, is_accessible, sort_order, remark, created_at, updated_at)
             VALUES (#{id}, #{mallId}, #{floorId}, #{nodeType}, #{name},
-                    ST_GeomFromGeoJSON(#{geomGeoJson}, 0),
+                    ST_SetSRID(ST_GeomFromGeoJSON(#{geomGeoJson}), 0),
                     #{isAccessible}, #{sortOrder}, #{remark}, now(), now())
             """)
     int insertWithGeometry(@Param("id") Long id,
@@ -39,4 +40,14 @@ public interface NavNodeMapper extends BaseMapper<NavNode> {
                            @Param("isAccessible") Boolean isAccessible,
                            @Param("sortOrder") Integer sortOrder,
                            @Param("remark") String remark);
+
+    /** 更新节点几何（编辑器拖拽移动节点; geom 为 NOT NULL 列, 走本方法绕过通用 CRUD） */
+    @Update("""
+            UPDATE nav_node
+            SET geom = ST_SetSRID(ST_GeomFromGeoJSON(#{geomGeoJson}), 0),
+                updated_at = now()
+            WHERE id = #{id}
+              AND deleted = 0
+            """)
+    int updateGeometry(@Param("id") Long id, @Param("geomGeoJson") String geomGeoJson);
 }

@@ -52,6 +52,10 @@ public class MallFloor {
     @Schema(description = "楼层平面图高度（米）")
     private Double heightM;
 
+    /** 楼层平面图URL（上传后返回, 导航图编辑器底图） */
+    @Schema(description = "楼层平面图URL（上传后返回, 导航图编辑器底图）")
+    private String imageUrl;
+
     /** 备注 */
     @Schema(description = "备注")
     private String remark;

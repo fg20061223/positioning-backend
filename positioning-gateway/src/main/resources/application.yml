@@ -33,6 +33,11 @@ spring:
               args:
                 name: businessBreaker
                 fallbackUri: forward:/fallback/business
+        # 上传文件静态访问（楼层平面图等, 由业务服务提供）
+        - id: positioning-files
+          uri: lb://positioning-business
+          predicates:
+            - Path=/uploads/**
       # 跨域配置（开发环境放开, 生产按需收紧）
       globalcors:
         cors-configurations:
