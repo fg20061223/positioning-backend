@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.positioning.business.mapper.NavNodeMapper">
+
+    <!-- 查询某商场所有可通行节点 -->
+    <select id="selectAccessibleByMall" resultType="com.positioning.business.entity.NavNode">
+        SELECT id, mall_id, floor_id, node_type, name, is_accessible, sort_order, remark
+        FROM nav_node
+        WHERE mall_id = #{mallId}
+          AND deleted = 0
+          AND is_accessible = TRUE
+    </select>
+
+    <!-- 带几何创建节点（geom 为 NOT NULL 列, 必须走本接口写入） -->
+    <insert id="insertWithGeometry">
+        INSERT INTO nav_node (id, mall_id, floor_id, node_type, name, geom, is_accessible, sort_order, remark, created_at, updated_at)
+        VALUES (#{id}, #{mallId}, #{floorId}, #{nodeType}, #{name},
+                ST_SetSRID(ST_GeomFromGeoJSON(#{geomGeoJson}), 0),
+                #{isAccessible}, #{sortOrder}, #{remark}, now(), now())
+    </insert>
+
+    <!-- 更新节点几何（编辑器拖拽移动节点; geom 为 NOT NULL 列, 走本方法绕过通用 CRUD） -->
+    <update id="updateGeometry">
+        UPDATE nav_node
+        SET geom = ST_SetSRID(ST_GeomFromGeoJSON(#{geomGeoJson}), 0),
+            updated_at = now()
+        WHERE id = #{id}
+          AND deleted = 0
+    </update>
+
+</mapper>

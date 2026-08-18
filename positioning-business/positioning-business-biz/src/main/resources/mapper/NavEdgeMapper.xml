@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.positioning.business.mapper.NavEdgeMapper">
+
+    <!-- 查询某商场所有可用边（路径规划用） -->
+    <select id="selectEnabledByMall" resultType="com.positioning.business.entity.NavEdge">
+        SELECT id, mall_id, from_node_id, to_node_id, edge_type, distance_m, weight, bidirectional, status
+        FROM nav_edge
+        WHERE mall_id = #{mallId}
+          AND status = 1
+          AND deleted = 0
+    </select>
+
+</mapper>

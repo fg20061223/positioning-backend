@@ -2,7 +2,6 @@ package com.positioning.business.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.positioning.business.entity.MallUser;
-import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -11,13 +10,6 @@ import java.util.List;
  */
 public interface MallUserMapper extends BaseMapper<MallUser> {
 
-    /** 查询用户在商场内的角色编码列表 */
-    @Select("""
-            SELECT role_code
-            FROM mall_user
-            WHERE user_id = #{userId}
-              AND status = 1
-              AND deleted = 0
-            """)
+    /** 查询用户在商场内的角色编码列表（SQL 见 mapper/MallUserMapper.xml） */
     List<String> selectRoleCodesByUserId(Long userId);
 }

@@ -35,6 +35,8 @@ sa-token:
 mybatis-plus:
   # 自定义类型处理器: PostgreSQL TIMESTAMPTZ -> LocalDateTime 转换
   type-handlers-package: com.positioning.common.mybatis
+  # Mapper XML 位置（SQL 统一放 resources/mapper/ 下, 不在 Java 硬编码）
+  mapper-locations: classpath*:/mapper/**/*.xml
   configuration:
     map-underscore-to-camel-case: true
   global-config:
