@@ -2,6 +2,8 @@ package com.positioning.business.controller;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.positioning.business.dto.OptionQuery;
+import com.positioning.business.dto.OptionVO;
 import com.positioning.business.entity.MallFloor;
 import com.positioning.business.mapper.MallFloorMapper;
 import com.positioning.common.api.Result;
@@ -44,5 +46,12 @@ public class FloorController extends BaseCrudController<MallFloor> {
         return Result.ok(floorMapper.selectList(Wrappers.lambdaQuery(MallFloor.class)
                 .eq(MallFloor::getMallId, request.getId())
                 .orderByAsc(MallFloor::getSortOrder)));
+    }
+
+    /** 楼层下拉数据（仅 id + floorName, 可按商场过滤, 供下拉框） */
+    @PostMapping("/options")
+    @Operation(summary = "楼层下拉数据", description = "楼层下拉数据（仅 id + name, 可按商场过滤, 入参 {\"mallId\":1}）")
+    public Result<List<OptionVO>> options(@RequestBody(required = false) @Parameter(description = "查询条件（可空）", required = false) OptionQuery query) {
+        return Result.ok(floorMapper.selectOptions(query));
     }
 }

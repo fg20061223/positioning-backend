@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.positioning.business.mapper.PoiMapper">
+
+    <!-- 设施下拉数据（仅 id + poi_name, 可按商场/楼层过滤） -->
+    <select id="selectOptions" resultType="com.positioning.business.dto.OptionVO">
+        SELECT id, poi_name AS name
+        FROM poi
+        WHERE deleted = 0
+          AND status = 1
+        <if test="mallId != null">
+          AND mall_id = #{mallId}
+        </if>
+        <if test="floorId != null">
+          AND floor_id = #{floorId}
+        </if>
+        ORDER BY id
+    </select>
+
+</mapper>
