@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.positioning.business.mapper.MallZoneMapper">
+
+    <!-- 分区下拉数据（仅 id + zone_name, 可按商场/楼层过滤） -->
+    <select id="selectOptions" resultType="com.positioning.business.dto.OptionVO">
+        SELECT id, zone_name AS name
+        FROM mall_zone
+        WHERE deleted = 0
+        <if test="mallId != null">
+          AND mall_id = #{mallId}
+        </if>
+        <if test="floorId != null">
+          AND floor_id = #{floorId}
+        </if>
+        ORDER BY sort_order, id
+    </select>
+
+</mapper>
