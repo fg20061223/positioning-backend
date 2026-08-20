@@ -25,7 +25,7 @@ public class OpenApiConfig {
     public OpenAPI positioningAuthOpenApi() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("商场可视化智能车位/商铺导航系统 - 认证服务 API")
+                        .title("商场可视化导航系统 - 认证服务 API")
                         .description("""
                                 认证服务接口文档（auth 架构）。
                                 接口约定: 全部 POST + JSON, 统一响应 {"code":200,"message":"操作成功","data":...}。
