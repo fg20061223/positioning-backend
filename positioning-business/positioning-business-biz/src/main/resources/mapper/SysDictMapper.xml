@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.positioning.business.mapper.SysDictMapper">
+
+    <!-- 按字典类型列表查询启用项（types 为空返回全部） -->
+    <select id="selectByTypes" resultType="com.positioning.business.entity.SysDict">
+        SELECT id, dict_type, dict_code, dict_label, sort_order, status, remark
+        FROM sys_dict
+        WHERE deleted = 0
+          AND status = 1
+        <if test="types != null and types.size() > 0">
+          AND dict_type IN
+          <foreach collection="types" item="t" open="(" separator="," close=")">
+              #{t}
+          </foreach>
+        </if>
+        ORDER BY dict_type, sort_order, id
+    </select>
+
+</mapper>

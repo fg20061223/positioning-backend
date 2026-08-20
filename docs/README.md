@@ -40,6 +40,7 @@
 | sql/02_business_db.sql | 建 business schema 与 18 张表 | |
 | sql/03_seed_auth.sql | 种子账号（admin/operator/demo，密码均 123456）+ RBAC 权限点 | |
 | sql/04_seed_business.sql | 示例商场种子数据（3 楼层/32 车位/13 商铺/导航图等） | |
+| sql/05_dict.sql | 系统字典表 + 枚举种子数据（21 类 82 项） | |
 
 ## 技术栈与版本
 
@@ -265,4 +266,4 @@ curl -X POST http://127.0.0.1:8081/business/nav/route \
 | `docs/DeepSeek-Harness-交接提示词.md` | 可直接粘贴给新执行环境的主提示词 |
 | `docs/初始代码版本提示词.txt` | 用户历史提示词（勿动） |
 | `docs/4.实体关系图.png` | 用户提供的 ER 图（勿动） |
-| `sql/00_init.sql` ~ `sql/04_seed_business.sql` | 数据库脚本 |
+| `sql/00_init.sql` ~ `sql/05_dict.sql` | 数据库脚本 |
