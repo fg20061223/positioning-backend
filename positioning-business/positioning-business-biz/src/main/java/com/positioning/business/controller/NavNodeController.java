@@ -5,9 +5,10 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.positioning.business.dto.NavNodeQuery;
 import com.positioning.business.dto.NavNodeCreateRequest;
+import com.positioning.business.dto.NavNodeGeoVO;
 import com.positioning.business.dto.NavNodeGeometryRequest;
+import com.positioning.business.dto.NavNodeQuery;
 import com.positioning.business.entity.NavNode;
 import com.positioning.business.mapper.NavNodeMapper;
 import com.positioning.common.api.PageResult;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * 导航节点接口
@@ -86,5 +89,15 @@ public class NavNodeController extends BaseCrudController<NavNode> {
             throw new BizException(404, "节点不存在");
         }
         return Result.ok();
+    }
+
+    /** 按商场/楼层查询节点几何（GeoJSON, 供导航图编辑器加载；通用分页的 geom 字段不返回） */
+    @PostMapping("/query-geometry")
+    @Operation(summary = "查询节点几何", description = "按商场/楼层查询节点几何（ST_AsGeoJSON 输出, 供导航图编辑器加载）")
+    public Result<List<NavNodeGeoVO>> queryGeometry(@RequestBody(required = false) @Parameter(description = "查询条件（商场/楼层）", required = false) NavNodeQuery request) {
+        if (request == null || request.getMallId() == null || request.getFloorId() == null) {
+            throw new BizException(400, "mallId/floorId 不能为空");
+        }
+        return Result.ok(navNodeMapper.selectGeoByFloor(request.getMallId(), request.getFloorId()));
     }
 }

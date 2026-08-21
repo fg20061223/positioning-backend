@@ -28,4 +28,16 @@
           AND deleted = 0
     </update>
 
+    <!-- 按商场/楼层查询节点几何（ST_AsGeoJSON, 供导航图编辑器加载） -->
+    <select id="selectGeoByFloor" resultType="com.positioning.business.dto.NavNodeGeoVO">
+        SELECT id, mall_id, floor_id, node_type, name,
+               ST_AsGeoJSON(geom) AS geom_geo_json,
+               is_accessible, sort_order, remark
+        FROM nav_node
+        WHERE mall_id = #{mallId}
+          AND floor_id = #{floorId}
+          AND deleted = 0
+        ORDER BY sort_order, id
+    </select>
+
 </mapper>
